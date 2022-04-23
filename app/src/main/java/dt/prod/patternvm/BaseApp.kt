@@ -6,7 +6,6 @@ import com.chibatching.kotpref.Kotpref
 import dagger.hilt.android.HiltAndroidApp
 //import dt.prod.patternvm.core.network.TokenRepository
 
-
 @HiltAndroidApp
 class BaseApp : Application() {
     companion object {
