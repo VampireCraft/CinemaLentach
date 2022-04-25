@@ -13,6 +13,7 @@ class CinemaOffsetModel(
     var opening_date: String,
     var date_updated: String,
     var link: LinkModel?,
+    @SerializedName("multimedia")
     var media: MediaModel?
 
     ) {
@@ -46,6 +47,13 @@ class LinkModel(
 class MediaModel(
     var type: String,
     var src: String,
-    var height: Int,
-    var width: Int
-)
+    var height: Int?,
+    var width: Int?
+){
+    constructor():this(
+        "",
+        "",
+        null,
+        null
+    )
+}

@@ -1,6 +1,5 @@
 package dt.prod.patternvm.cinemaView.ui
 
-import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -34,7 +33,6 @@ class CinemasAdapter(private val glide: GlideRequests)
     companion object {
 
         val POST_COMPARATOR = object : DiffUtil.ItemCallback<CinemaOffsetModel>() {
-            @SuppressLint("DiffUtilEquals")
             override fun areContentsTheSame(oldItem: CinemaOffsetModel, newItem: CinemaOffsetModel): Boolean =
                     oldItem == newItem
 
