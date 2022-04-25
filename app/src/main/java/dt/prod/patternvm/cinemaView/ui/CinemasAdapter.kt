@@ -38,7 +38,6 @@ class CinemasAdapter(private val glide: GlideRequests)
 
             override fun areItemsTheSame(oldItem: CinemaOffsetModel, newItem: CinemaOffsetModel): Boolean =
                     oldItem.display_title == newItem.display_title
-
         }
     }
 }

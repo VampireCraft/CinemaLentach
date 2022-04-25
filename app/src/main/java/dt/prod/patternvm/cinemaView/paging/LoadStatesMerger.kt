@@ -1,6 +1,5 @@
 package dt.prod.patternvm.cinemaView.paging
 
-import androidx.annotation.VisibleForTesting
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.LoadState.NotLoading
@@ -10,27 +9,8 @@ import androidx.paging.PagingSource.LoadResult.Error
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.scan
-import androidx.paging.PagingDataAdapter
-import androidx.paging.RemoteMediator
-import androidx.paging.PagingSource
-import androidx.paging.LoadType.REFRESH
-import androidx.paging.LoadType
 import dt.prod.patternvm.cinemaView.paging.MergedState.*
 
-
-/**
- * Converts the raw [CombinedLoadStates] [Flow] from [PagingDataAdapter.loadStateFlow] into a new
- * [Flow] of [CombinedLoadStates] that track [CombinedLoadStates.mediator] states as they are
- * synchronously applied in the UI. Any [Loading] state triggered by [RemoteMediator] will only
- * transition back to [NotLoading] after the fetched items have been synchronously shown in UI by a
- * successful [PagingSource] load of type [REFRESH].
- *
- * Note: This class assumes that the [RemoteMediator] implementation always invalidates
- * [PagingSource] on a successful fetch, even if no data was modified (which Room does by default).
- * Using this class without this guarantee can cause [LoadState] to get indefinitely stuck as
- * [Loading] in cases where invalidation doesn't happen because the fetched network data represents
- * exactly what is already cached in DB.
- */
 @OptIn(ExperimentalCoroutinesApi::class)
 fun Flow<CombinedLoadStates>.asMergedLoadStates(): Flow<LoadStates> {
     val syncRemoteState = LoadStatesMerger()
@@ -40,10 +20,6 @@ fun Flow<CombinedLoadStates>.asMergedLoadStates(): Flow<LoadStates> {
     }
 }
 
-/**
- * Track the combined [LoadState] of [RemoteMediator] and [PagingSource], so that each load type
- * is only set to [NotLoading] when [RemoteMediator] load is applied on presenter-side.
- */
 private class LoadStatesMerger {
     var refresh: LoadState = NotLoading(endOfPaginationReached = false)
         private set
@@ -64,10 +40,6 @@ private class LoadStatesMerger {
         append = append
     )
 
-    /**
-     * For every new emission of [CombinedLoadStates] from the original [Flow], update the
-     * [MergedState] of each [LoadType] and compute the new [LoadState].
-     */
     fun updateFromCombinedLoadStates(combinedLoadStates: CombinedLoadStates) {
         computeNextLoadStateAndMergedState(
             sourceRefreshState = combinedLoadStates.source.refresh,
@@ -98,10 +70,6 @@ private class LoadStatesMerger {
         }
     }
 
-    /**
-     * Compute which [LoadState] and [MergedState] to transition, given the previous and current
-     * state for a particular [LoadType].
-     */
     private fun computeNextLoadStateAndMergedState(
         sourceRefreshState: LoadState,
         sourceState: LoadState,
@@ -141,37 +109,15 @@ private class LoadStatesMerger {
     }
 }
 
-/**
- * State machine used to compute [LoadState] values in [LoadStatesMerger].
- *
- * This allows [LoadStatesMerger] to track whether to block transitioning to [NotLoading] from the
- * [Loading] state if it was triggered by [RemoteMediator], until [PagingSource] invalidates and
- * completes [REFRESH].
- */
 private enum class MergedState {
-    /**
-     * Idle state; defer to remote state for endOfPaginationReached.
-     */
+
     NOT_LOADING,
 
-    /**
-     * Remote load triggered; start listening for source refresh.
-     */
     REMOTE_STARTED,
 
-    /**
-     * Waiting for remote in error state to get retried
-     */
     REMOTE_ERROR,
 
-    /**
-     * Source refresh triggered by remote invalidation, once this completes we can be sure
-     * the next generation was loaded.
-     */
     SOURCE_LOADING,
 
-    /**
-     *  Remote load completed, but waiting for source refresh in error state to get retried.
-     */
     SOURCE_ERROR,
 }

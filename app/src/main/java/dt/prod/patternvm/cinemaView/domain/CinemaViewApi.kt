@@ -4,8 +4,7 @@ import android.util.Log
 import dt.prod.patternvm.BuildConfig
 import dt.prod.patternvm.cinemaView.models.CinemaOffsetModel
 import retrofit2.http.*
-import dt.prod.patternvm.core.model.ResponseWrapper
-import okhttp3.HttpUrl
+import dt.prod.patternvm.cinemaView.models.ResponseWrapper
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

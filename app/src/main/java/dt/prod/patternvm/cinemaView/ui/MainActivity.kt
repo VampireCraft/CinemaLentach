@@ -1,7 +1,9 @@
-package dt.prod.patternvm.core.ui
+package dt.prod.patternvm.cinemaView.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.activity.viewModels
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
@@ -13,8 +15,8 @@ import dt.prod.patternvm.cinemaView.GlideApp
 import dt.prod.patternvm.cinemaView.ServiceLocator
 import dt.prod.patternvm.cinemaView.models.CinemaViewModel
 import dt.prod.patternvm.cinemaView.paging.asMergedLoadStates
-import dt.prod.patternvm.cinemaView.ui.CinemasAdapter
 import dt.prod.patternvm.databinding.ActivityMainBinding
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
@@ -46,8 +48,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initAdapter()
-        //initSwipeToRefresh()
-        viewModel.showSubreddit("androiddev")
+        initList()
     }
 
     private fun initAdapter() {
@@ -58,12 +59,6 @@ class MainActivity : AppCompatActivity() {
             footer = PostsLoadStateAdapter(adapter)
         )
 
-//        lifecycleScope.launchWhenCreated {
-//            adapter.loadStateFlow.collect { loadStates ->
-//                binding.srlRefreshList.isRefreshing = loadStates.mediator?.refresh is LoadState.Loading
-//            }
-//        }
-
         lifecycleScope.launchWhenCreated {
             viewModel.posts.collectLatest {
                 adapter.submitData(it)
@@ -72,20 +67,26 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launchWhenCreated {
             adapter.loadStateFlow
-                // Use a state-machine to track LoadStates such that we only transition to
-                // NotLoading from a RemoteMediator load if it was also presented to UI.
                 .asMergedLoadStates()
-                // Only emit when REFRESH changes, as we only want to react on loads replacing the
-                // list.
                 .distinctUntilChangedBy { it.refresh }
-                // Only react to cases where REFRESH completes i.e., NotLoading.
                 .filter { it.refresh is LoadState.NotLoading }
-                // Scroll to top is synchronous with UI updates, even if remote load was triggered.
                 .collect { binding.rvCinemaList.scrollToPosition(0) }
+        }
+
+    }
+
+    private fun initList(){
+        viewModel.showList("list")
+        lifecycleScope.launchWhenStarted {
+            closeIntro()
         }
     }
 
-    private fun initSwipeToRefresh() {
-        //binding.srlRefreshList.setOnRefreshListener { adapter.refresh() }
+    private suspend fun closeIntro(){
+        delay(2000)
+        binding.ivIntro.visibility = GONE
+        binding.tvIntro.visibility = GONE
+        delay(200)
+        binding.rvCinemaList.visibility = VISIBLE
     }
 }

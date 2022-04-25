@@ -1,9 +1,10 @@
-package dt.prod.patternvm.core.ui
+package dt.prod.patternvm.cinemaView.ui
 
 import android.view.ViewGroup
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import dt.prod.patternvm.cinemaView.ui.CinemasAdapter
+import dt.prod.patternvm.cinemaView.ui.NetworkStateItemViewHolder
 
 class PostsLoadStateAdapter(
         private val adapter: CinemasAdapter

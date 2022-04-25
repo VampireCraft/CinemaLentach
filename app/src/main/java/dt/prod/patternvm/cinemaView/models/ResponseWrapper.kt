@@ -1,4 +1,4 @@
-package dt.prod.patternvm.core.model
+package dt.prod.patternvm.cinemaView.models
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable

@@ -25,16 +25,12 @@ class CinemaViewRepositoryImpl(private val createEventApi: CinemaViewApi) : Pagi
             LoadResult.Error(e)
         } catch (e: HttpException) {
             LoadResult.Error(e)
-        } catch (e: Exception) {
-            Log.e("yuh822", e.toString())
-            LoadResult.Error(e)
         }
     }
 
     override fun getRefreshKey(state: PagingState<String, CinemaOffsetModel>): String? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey ?: "1"
-            state.closestPageToPosition(anchorPosition)?.nextKey
         }
     }
 }

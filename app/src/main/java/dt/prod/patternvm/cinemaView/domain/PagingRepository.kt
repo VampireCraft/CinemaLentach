@@ -6,8 +6,4 @@ import kotlinx.coroutines.flow.Flow
 
 interface PagingRepository {
     fun postsOfSubreddit(pageSize: Int): Flow<PagingData<CinemaOffsetModel>>
-
-    enum class Type {
-        IN_MEMORY_BY_PAGE
-    }
 }
