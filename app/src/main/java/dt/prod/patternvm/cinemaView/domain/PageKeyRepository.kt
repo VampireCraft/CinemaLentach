@@ -1,4 +1,4 @@
-package dt.prod.patternvm.cinemaView.byPage
+package dt.prod.patternvm.cinemaView.domain
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -6,12 +6,12 @@ import dt.prod.patternvm.cinemaView.data.CinemaViewRepositoryImpl
 import dt.prod.patternvm.cinemaView.domain.CinemaViewApi
 import dt.prod.patternvm.cinemaView.domain.PagingRepository
 
-class InMemoryByPageKeyRepository(private val redditApi: CinemaViewApi) : PagingRepository {
-    override fun postsOfSubreddit(pageSize: Int) = Pager(
+class PageKeyRepository(private val cinemaViewApi: CinemaViewApi) : PagingRepository {
+    override fun cinemaOfList(pageSize: Int) = Pager(
         PagingConfig(pageSize)
     ) {
         CinemaViewRepositoryImpl(
-            createEventApi = redditApi
+            cinemaViewApi = cinemaViewApi
         )
     }.flow
 }

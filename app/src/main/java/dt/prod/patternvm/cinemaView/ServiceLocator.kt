@@ -1,8 +1,7 @@
 package dt.prod.patternvm.cinemaView
 
 import android.content.Context
-import androidx.annotation.VisibleForTesting
-import dt.prod.patternvm.cinemaView.byPage.InMemoryByPageKeyRepository
+import dt.prod.patternvm.cinemaView.domain.PageKeyRepository
 import dt.prod.patternvm.cinemaView.domain.CinemaViewApi
 import dt.prod.patternvm.cinemaView.domain.PagingRepository
 
@@ -18,11 +17,6 @@ interface ServiceLocator {
                 return instance!!
             }
         }
-
-        @VisibleForTesting
-        fun swap(locator: ServiceLocator) {
-            instance = locator
-        }
     }
 
     fun getRepository(): PagingRepository
@@ -37,7 +31,7 @@ open class DefaultServiceLocator() : ServiceLocator {
     }
 
     override fun getRepository(): PagingRepository {
-            return InMemoryByPageKeyRepository(redditApi = getRedditApi())
+            return PageKeyRepository(cinemaViewApi = getRedditApi())
     }
 
     override fun getRedditApi(): CinemaViewApi = api

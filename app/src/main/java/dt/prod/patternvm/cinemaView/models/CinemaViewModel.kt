@@ -27,7 +27,7 @@ class CinemaViewModel(
     @OptIn(ExperimentalCoroutinesApi::class)
     val posts = savedStateHandle.getLiveData<String>(KEY_LIST)
         .asFlow()
-        .flatMapLatest { repository.postsOfSubreddit( 20) }
+        .flatMapLatest { repository.cinemaOfList( 20) }
         .cachedIn(viewModelScope)
 
     fun showList(keyList: String) {

@@ -5,5 +5,5 @@ import dt.prod.patternvm.cinemaView.models.CinemaOffsetModel
 import kotlinx.coroutines.flow.Flow
 
 interface PagingRepository {
-    fun postsOfSubreddit(pageSize: Int): Flow<PagingData<CinemaOffsetModel>>
+    fun cinemaOfList(pageSize: Int): Flow<PagingData<CinemaOffsetModel>>
 }

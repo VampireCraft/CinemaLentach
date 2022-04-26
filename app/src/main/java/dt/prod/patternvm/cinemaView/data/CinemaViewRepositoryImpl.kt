@@ -1,6 +1,5 @@
 package dt.prod.patternvm.cinemaView.data
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import dt.prod.patternvm.cinemaView.domain.CinemaViewApi
@@ -8,11 +7,11 @@ import dt.prod.patternvm.cinemaView.models.CinemaOffsetModel
 import retrofit2.HttpException
 import java.io.IOException
 
-class CinemaViewRepositoryImpl(private val createEventApi: CinemaViewApi) : PagingSource<String, CinemaOffsetModel>() {
+class CinemaViewRepositoryImpl(private val cinemaViewApi: CinemaViewApi) : PagingSource<String, CinemaOffsetModel>() {
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, CinemaOffsetModel> {
         return try {
-            val items = createEventApi.createEvent(
+            val items = cinemaViewApi.createEvent(
                     offset = params.key ?: "1"
                 ).data
 
