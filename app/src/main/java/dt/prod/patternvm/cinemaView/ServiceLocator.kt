@@ -21,7 +21,7 @@ interface ServiceLocator {
 
     fun getRepository(): PagingRepository
 
-    fun getRedditApi(): CinemaViewApi
+    fun getCinemaApi(): CinemaViewApi
 }
 
 open class DefaultServiceLocator() : ServiceLocator {
@@ -31,8 +31,8 @@ open class DefaultServiceLocator() : ServiceLocator {
     }
 
     override fun getRepository(): PagingRepository {
-            return PageKeyRepository(cinemaViewApi = getRedditApi())
+            return PageKeyRepository(cinemaViewApi = getCinemaApi())
     }
 
-    override fun getRedditApi(): CinemaViewApi = api
+    override fun getCinemaApi(): CinemaViewApi = api
 }

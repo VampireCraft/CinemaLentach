@@ -2,24 +2,19 @@ package dt.prod.patternvm.cinemaView.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View.GONE
-import android.view.View.VISIBLE
+import android.view.View.*
 import androidx.activity.viewModels
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.LoadState
 import dagger.hilt.android.AndroidEntryPoint
 import dt.prod.patternvm.cinemaView.GlideApp
 import dt.prod.patternvm.cinemaView.ServiceLocator
 import dt.prod.patternvm.cinemaView.models.CinemaViewModel
-import dt.prod.patternvm.cinemaView.paging.asMergedLoadStates
 import dt.prod.patternvm.databinding.ActivityMainBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChangedBy
-import kotlinx.coroutines.flow.filter
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -64,15 +59,6 @@ class MainActivity : AppCompatActivity() {
                 adapter.submitData(it)
             }
         }
-
-        lifecycleScope.launchWhenCreated {
-            adapter.loadStateFlow
-                .asMergedLoadStates()
-                .distinctUntilChangedBy { it.refresh }
-                .filter { it.refresh is LoadState.NotLoading }
-                .collect { binding.rvCinemaList.scrollToPosition(0) }
-        }
-
     }
 
     private fun initList(){
@@ -86,6 +72,7 @@ class MainActivity : AppCompatActivity() {
         delay(2000)
         binding.ivIntro.visibility = GONE
         binding.tvIntro.visibility = GONE
+        binding.rvCinemaList.visibility = INVISIBLE
         delay(200)
         binding.rvCinemaList.visibility = VISIBLE
     }
